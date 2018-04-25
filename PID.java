@@ -30,13 +30,13 @@ public class PID {
 	static double targetDistance = 30; // cm
 	
 	//Constants
-	static double kp = 3.65;
+	static double kp = 3.65    ;
 	static double ki = 0;
 	static double kd = 0;
 	
 	private static void setDistance(){
 		if(targetDistance == 50){
-			targetDistance = 30;
+			targetDistance = 50;
 		}
 		else{
 			targetDistance = 50;
@@ -53,20 +53,23 @@ public class PID {
         Motor leftMotor = myRobot.getLargeMotor(Motor.Port.B);
         Motor rightMotor = myRobot.getLargeMotor(Motor.Port.C);
         UltrasonicSensor sensor = myRobot.getUltrasonicSensor(Sensor.Port.S2);
+        long t = System.currentTimeMillis();
+        long tenSec = 10000;
+        long finish = t + 30000;
+        long end = t + tenSec;
         
         
-        while(true) {
-            long t = System.currentTimeMillis();
-            long tenSec = 10000;
-            long finish = t + 60000;
-            long end = t + tenSec;
+        while(System.currentTimeMillis() < finish) {
+            
             setDistance();
+            int counter = 0 ;
 
             if(t >= finish ){
                 break;
             }
             
             while(true) {
+                counter ++;
                 double error = (sensor.getDistance() * 100) - targetDistance; 
                 if(System.currentTimeMillis() >= end){
                     break;
@@ -118,7 +121,7 @@ public class PID {
 		
 
 		// //Disconnect from the Robot
-  //       myRobot.close();
+        myRobot.close();
 		
 
 	}
