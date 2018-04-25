@@ -29,7 +29,7 @@ public class PID {
 	static double targetDistance = 30; // cm
 	
 	//Constants
-	static double kp = 1;
+	static double kp = 2.5;
 	static double ki = 0;
 	static double kd = 0;
 	
@@ -57,8 +57,13 @@ public class PID {
         while(true) {
             long t = System.currentTimeMillis();
             long tenSec = 10000;
+            long finish = t + 60000;
             long end = t + tenSec;
             setDistance();
+
+            if(t >= finish ){
+                break;
+            }
             
             while(true) {
                 double error = (sensor.getDistance() * 100) - targetDistance; 
@@ -98,14 +103,6 @@ public class PID {
                     leftMotor.backward();
                     rightMotor.backward();
                 }
-                // try{
-                //     Thread.sleep(10000);
-
-                // }
-                // catch(InterruptedException ex){
-                //     System.out.println("thread error");
-                // }
-
             
             
             }
