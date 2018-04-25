@@ -10,7 +10,7 @@ public class RobotSample {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-
+        
         //Create a robot object to use and connect to it
         Robot myRobot = new Robot("dia-lego-a1");
        
@@ -26,6 +26,9 @@ public class RobotSample {
             myRobot.sleep(1);
             System.out.println(ultrasonicSensor.getDistance());
         }
+        
+      
+        
         // //Go Forwards
         // leftMotor.setSpeed(150);
         // rightMotor.setSpeed(150);

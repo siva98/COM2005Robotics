@@ -22,11 +22,11 @@ public class PID {
 	
 	static double integralThreshold;
 	static double errorTotal;
-	static double lastError;
+	static double lastError = 0;
 	static double proportional;
 	static double integral;
 	static double derivative;
-	static double targetDistance; // cm
+	static double targetDistance = 50; // cm
 	
 	//Constants
 	static double kp = 1;
@@ -52,62 +52,79 @@ public class PID {
         Motor leftMotor = myRobot.getLargeMotor(Motor.Port.B);
         Motor rightMotor = myRobot.getLargeMotor(Motor.Port.C);
         UltrasonicSensor sensor = myRobot.getUltrasonicSensor(Sensor.Port.S2);
+        
+        
 
-        // while(true){
-        // 	try{
-        // 		int secondsToSleep = 20;
-        // 		Thread.sleep(secondsToSleep * 1000);
+        // while(System.currentTimeMillis < end){
+        	// try{
+        		// int secondsToSleep = 10;
+        		// Thread.sleep(secondsToSleep * 1000);
 
-        // 	}
-        // 	catch(InterruptedException ex){
-        // 		System.out.println("thread error");
-        // 	}
-        // 	setDistance();
+        	// }
+        	// catch(InterruptedException ex){
+        		// System.out.println("thread error");
+        	// }
+        	// setDistance();
+        // }
+        
+        while(true) {
+            long t = System.currentTimeMillis();
+            long tenSec = 10000;
+            long end = t + tenSec;
+            setDistance();
 
-    	while(true) {
-			double error = (sensor.getDistance() * 100) - targetDistance; 
+            while(System.currentTimeMillis() < end) {
+                double error = (sensor.getDistance() * 100) - targetDistance; 
 
 
-			if(error < integralThreshold && error != 0){
-				errorTotal += error;
-			}
-			else{
-				errorTotal = 0;
-			}
+                if(error != 0){
+                    errorTotal += error;
+                }
+                else{
+                    errorTotal = 0;
+                }
 
-			//Cap the integral from growing too large
-			// if(errorTotal > 50/ki){
-			// 	errorTotal = 50/ki;
-			// 
+                //Cap the integral from growing too large
+                // if(errorTotal > 50/ki){
+                // 	errorTotal = 50/ki;
+                // 
 
-			if(error == 0){
-				derivative = 0;
-			}
+                if(error == 0){
+                    derivative = 0;
+                }
 
-			proportional = error * kp;
-			integral = errorTotal * ki;
-			derivative = (error - lastError) * kd;
+                proportional = Math.abs(error) * kp;
+                integral = errorTotal * ki;
+                derivative = (error - lastError) * kd;
 
-			lastError = error;
-			double power = proportional + integral + derivative;
-			System.out.println(power);
+                lastError = error;
+                double power = (proportional + integral + derivative) * 10;
+                System.out.println("Error: "+error);
+                System.out.println("Distance: "+sensor.getDistance());
 
-			leftMotor.setSpeed((int)power);
-        	rightMotor.setSpeed((int)power);
+                leftMotor.setSpeed((int)power);
+                rightMotor.setSpeed((int)power);
 
-        	if(error > 0){
-        		leftMotor.forward();
-        		rightMotor.forward();
-        	}
-        	else{
-        		leftMotor.backward();
-        		rightMotor.backward();
-        	}
-        	
+                if(error > 0){
+                    leftMotor.forward();
+                    rightMotor.forward();
+                }
+                else{
+                    leftMotor.backward();
+                    rightMotor.backward();
+                }
+                try{
+                    Thread.sleep(10000);
 
-		
-		
-		}
+                }
+                catch(InterruptedException ex){
+                    System.out.println("thread error");
+                }
+
+            
+            
+            }
+        }
         // }
 
 
