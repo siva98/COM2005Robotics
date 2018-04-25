@@ -20,7 +20,8 @@ import java.util.concurrent.TimeUnit;
 
 public class PID {
 	
-	static double integralThreshold;
+
+	static double maxSpeed = 500;
 	static double errorTotal;
 	static double lastError = 0;
 	static double proportional;
@@ -29,7 +30,7 @@ public class PID {
 	static double targetDistance = 30; // cm
 	
 	//Constants
-	static double kp = 2.5;
+	static double kp = 3.65;
 	static double ki = 0;
 	static double kd = 0;
 	
@@ -45,7 +46,7 @@ public class PID {
 	public static void main(String[] args) {
 		
 		//Create a robot object to use and connect to it
-        Robot myRobot = new Robot("dia-lego-a1");
+        Robot myRobot = new Robot("dia-lego-a8");
        
         //The robot is made of components which are themselves objects.
         //Create references to them as useful shortcuts
@@ -91,6 +92,10 @@ public class PID {
                 double speed = Math.abs((proportional + integral + derivative) * 10);
                 System.out.println("Error: "+error);
                 System.out.println("Distance: "+sensor.getDistance());
+
+                if(speed >= maxSpeed){
+                    speed = maxSpeed;
+                }
 
                 leftMotor.setSpeed((int)speed);
                 rightMotor.setSpeed((int)speed);
