@@ -26,7 +26,7 @@ public class PID {
 	static double proportional;
 	static double integral;
 	static double derivative;
-	static double targetDistance = 50; // cm
+	static double targetDistance = 30; // cm
 	
 	//Constants
 	static double kp = 1;
@@ -54,28 +54,17 @@ public class PID {
         UltrasonicSensor sensor = myRobot.getUltrasonicSensor(Sensor.Port.S2);
         
         
-
-        // while(System.currentTimeMillis < end){
-        	// try{
-        		// int secondsToSleep = 10;
-        		// Thread.sleep(secondsToSleep * 1000);
-
-        	// }
-        	// catch(InterruptedException ex){
-        		// System.out.println("thread error");
-        	// }
-        	// setDistance();
-        // }
-        
         while(true) {
             long t = System.currentTimeMillis();
             long tenSec = 10000;
             long end = t + tenSec;
             setDistance();
-
-            while(System.currentTimeMillis() < end) {
+            
+            while(true) {
                 double error = (sensor.getDistance() * 100) - targetDistance; 
-
+                if(System.currentTimeMillis() >= end){
+                    break;
+                }
 
                 if(error != 0){
                     errorTotal += error;
@@ -84,26 +73,22 @@ public class PID {
                     errorTotal = 0;
                 }
 
-                //Cap the integral from growing too large
-                // if(errorTotal > 50/ki){
-                // 	errorTotal = 50/ki;
-                // 
 
                 if(error == 0){
                     derivative = 0;
                 }
 
-                proportional = Math.abs(error) * kp;
+                proportional = error * kp;
                 integral = errorTotal * ki;
                 derivative = (error - lastError) * kd;
 
                 lastError = error;
-                double power = (proportional + integral + derivative) * 10;
+                double speed = Math.abs((proportional + integral + derivative) * 10);
                 System.out.println("Error: "+error);
                 System.out.println("Distance: "+sensor.getDistance());
 
-                leftMotor.setSpeed((int)power);
-                rightMotor.setSpeed((int)power);
+                leftMotor.setSpeed((int)speed);
+                rightMotor.setSpeed((int)speed);
 
                 if(error > 0){
                     leftMotor.forward();
@@ -113,13 +98,13 @@ public class PID {
                     leftMotor.backward();
                     rightMotor.backward();
                 }
-                try{
-                    Thread.sleep(10000);
+                // try{
+                //     Thread.sleep(10000);
 
-                }
-                catch(InterruptedException ex){
-                    System.out.println("thread error");
-                }
+                // }
+                // catch(InterruptedException ex){
+                //     System.out.println("thread error");
+                // }
 
             
             
