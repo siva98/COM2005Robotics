@@ -60,13 +60,15 @@ public class MazeBot {
             double rightDistance = sensorR.getDistance() * 100;
 
             if(leftDistance == Double.POSITIVE_INFINITY || leftDistance == Double.NEGATIVE_INFINITY){
+                System.out.println("CAUGHT LEFT INFINITY ERROR");
                 leftDistance = lastLeftDistance;
             }
             if(rightDistance == Double.POSITIVE_INFINITY || rightDistance == Double.NEGATIVE_INFINITY){
+                System.out.println("CAUGHT RIGHT INFINITY ERROR")
                 rightDistance = lastRightDistance;
             }
             double sensorTarget = (leftDistance + rightDistance / 2);
-            double error = (sensorL.getDistance() * 100) - sensorTarget; 
+            double error = (leftDistance * 100) - sensorTarget; 
             
             
 
@@ -92,8 +94,8 @@ public class MazeBot {
             double motorSpeed = speed / 1.5;
 
             System.out.println("Error: "+error);
-            System.out.println("DISTANCE LEFT: "+sensorL.getDistance());
-            System.out.println("DISTANCE RIGHT: "+sensorR.getDistance());
+            System.out.println("DISTANCE LEFT: "+ leftDistance;
+            System.out.println("DISTANCE RIGHT: "+ rightDistance;
             System.out.println("SPEED: " + speed);
 
             if(speed >= maxSpeed){
