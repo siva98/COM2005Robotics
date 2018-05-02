@@ -53,8 +53,18 @@ public class Maze {
             
         while(true) {
             double sensorTarget = (sensorL.getDistance() + sensorR.getDistance())/2;
-            double errorL = (sensorL.getDistance() * 100) - sensorTarget; 
-            double errorR = (sensorR.getDistance() * 100) - sensorTarget; 
+            double leftDistance = sensorL.getDistance();
+            double rightDistance = sensorR.getDistance();
+
+            if (leftDistance == double.POSITIVE_INFINITY){
+                leftDistance = 0;
+            }
+            if (rightDistance == double.POSITIVE_INFINITY){
+                rightDistance = 0;
+            }
+
+            double errorL = (leftDistance * 100) - sensorTarget; 
+            double errorR = (rightDistance * 100) - sensorTarget; 
             double errorRL = errorL + errorR;
             
 
