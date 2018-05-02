@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
 public class MazeBot {
 	
 
-	static double maxSpeed = 50;
+	static double maxSpeed = 200;
 	static double errorTotal;
 	static double lastError = 0;
 	static double proportional;
@@ -34,9 +34,9 @@ public class MazeBot {
     static double lastRightDistance = 0;
 	
 	//Constants
-	static double kp = 8.7;
-	static double ki = 13;
-	static double kd = 1.5;
+	static double kp = 7.3;
+	static double ki = 1.5;
+	static double kd = 0.2;
 	
 
 	
@@ -61,14 +61,25 @@ public class MazeBot {
 
             if(leftDistance == Double.POSITIVE_INFINITY || leftDistance == Double.NEGATIVE_INFINITY){
                 System.out.println("CAUGHT LEFT INFINITY ERROR");
-                leftDistance = lastLeftDistance;
+                if(lastLeftDistance != Double.POSITIVE_INFINITY && lastLeftDistance != Double.NEGATIVE_INFINITY){
+                    leftDistance = 0;
+                }
+                else{
+                    leftDistance = lastLeftDistance;
+                }
+                
             }
             if(rightDistance == Double.POSITIVE_INFINITY || rightDistance == Double.NEGATIVE_INFINITY){
-                System.out.println("CAUGHT RIGHT INFINITY ERROR")
-                rightDistance = lastRightDistance;
+                System.out.println("CAUGHT RIGHT INFINITY ERROR");
+                if(lastRightDistance != Double.POSITIVE_INFINITY && lastRightDistance != Double.NEGATIVE_INFINITY){
+                    rightDistance = 0;
+                }
+                else{
+                    rightDistance = lastRightDistance;
+                }
             }
-            double sensorTarget = (leftDistance + rightDistance / 2);
-            double error = (leftDistance * 100) - sensorTarget; 
+            double sensorTarget = (leftDistance + rightDistance )/2;
+            double error = (leftDistance ) - sensorTarget; 
             
             
 
@@ -91,18 +102,19 @@ public class MazeBot {
             lastError = error;
 
             double speed = Math.abs((proportional + integral + derivative) * 10);
-            double motorSpeed = speed / 1.5;
+            
 
             System.out.println("Error: "+error);
-            System.out.println("DISTANCE LEFT: "+ leftDistance;
-            System.out.println("DISTANCE RIGHT: "+ rightDistance;
+            System.out.println("DISTANCE LEFT: "+ leftDistance);
+            System.out.println("DISTANCE RIGHT: "+ rightDistance);
             System.out.println("SPEED: " + speed);
 
             if(speed >= maxSpeed){
                 speed = maxSpeed;
             }
-            System.out.println("SPEED AFTER MAX:" + speed);
-
+            double motorSpeed = speed;
+            System.out.println("motor SPEED AFTER MAX:" + motorSpeed);
+            
             
             if(error == 0){
                 leftMotor.setSpeed(defaultSpeed);
@@ -113,16 +125,18 @@ public class MazeBot {
 
             }
               
-            //Turn Left
+            //Turn Right
             if(error > 0){
+                myRobot.sleep(100);
                 leftMotor.setSpeed(defaultSpeed);
                 rightMotor.setSpeed((int)motorSpeed);
                 leftMotor.forward();
                 rightMotor.forward();
                 System.out.println("leftTurn");
             }
-            //Turn Right
+            //Turn Left
             else{
+                myRobot.sleep(100);
                 rightMotor.setSpeed(defaultSpeed);
                 leftMotor.setSpeed((int)motorSpeed);
                 leftMotor.forward();
