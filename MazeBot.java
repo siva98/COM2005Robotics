@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
 public class MazeBot {
 	
 
-	static double maxSpeed = 500;
+	static double maxSpeed = 50;
 	static double errorTotal;
 	static double lastError = 0;
 	static double proportional;
@@ -29,11 +29,14 @@ public class MazeBot {
 	static double derivative;
 	static double targetDistance = 5; // cm
     static int defaultSpeed = 100;
+
+    static double lastLeftDistance = 0;
+    static double lastRightDistance = 0;
 	
 	//Constants
-	static double kp = 8.76;
-	static double ki = 13.17;
-	static double kd = 1.46;
+	static double kp = 8.7;
+	static double ki = 13;
+	static double kd = 1.5;
 	
 
 	
@@ -46,13 +49,23 @@ public class MazeBot {
         //Create references to them as useful shortcuts
         Motor leftMotor = myRobot.getLargeMotor(Motor.Port.B);
         Motor rightMotor = myRobot.getLargeMotor(Motor.Port.C);
+        TouchSensor button = myRobot.getTouchSensor(Sensor.Port.S4);
         UltrasonicSensor sensorL = myRobot.getUltrasonicSensor(Sensor.Port.S3);
         UltrasonicSensor sensorR = myRobot.getUltrasonicSensor(Sensor.Port.S2);
         
         
             
-        while(true) {
-            double sensorTarget = (sensorL.getDistance() + sensorR.getDistance())/2;
+        while(!(button.isTouched())) {
+            double leftDistance = sensorL.getDistance() * 100;
+            double rightDistance = sensorR.getDistance() * 100;
+
+            if(leftDistance == Double.POSITIVE_INFINITY || leftDistance == Double.NEGATIVE_INFINITY){
+                leftDistance = lastLeftDistance;
+            }
+            if(rightDistance == Double.POSITIVE_INFINITY || rightDistance == Double.NEGATIVE_INFINITY){
+                rightDistance = lastRightDistance;
+            }
+            double sensorTarget = (leftDistance + rightDistance / 2);
             double error = (sensorL.getDistance() * 100) - sensorTarget; 
             
             
@@ -76,15 +89,17 @@ public class MazeBot {
             lastError = error;
 
             double speed = Math.abs((proportional + integral + derivative) * 10);
-            double motorSpeed = speed / 1.1;
+            double motorSpeed = speed / 1.5;
 
             System.out.println("Error: "+error);
             System.out.println("DISTANCE LEFT: "+sensorL.getDistance());
             System.out.println("DISTANCE RIGHT: "+sensorR.getDistance());
+            System.out.println("SPEED: " + speed);
 
             if(speed >= maxSpeed){
                 speed = maxSpeed;
             }
+            System.out.println("SPEED AFTER MAX:" + speed);
 
             
             if(error == 0){
@@ -92,7 +107,7 @@ public class MazeBot {
                 rightMotor.setSpeed(defaultSpeed);
                 leftMotor.forward();
                 rightMotor.forward();
-                System.println("go")
+                System.out.println("go");
 
             }
               
@@ -102,7 +117,7 @@ public class MazeBot {
                 rightMotor.setSpeed((int)motorSpeed);
                 leftMotor.forward();
                 rightMotor.forward();
-                System.println("leftTurn")
+                System.out.println("leftTurn");
             }
             //Turn Right
             else{
@@ -110,10 +125,11 @@ public class MazeBot {
                 leftMotor.setSpeed((int)motorSpeed);
                 leftMotor.forward();
                 rightMotor.forward();
-                System.println("leftTurn")
+                System.out.println("right Turn");
 
             }
-        
+            lastLeftDistance = leftDistance;
+            lastRightDistance = rightDistance;
         
         }
     

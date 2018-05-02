@@ -18,10 +18,11 @@
 import ShefRobot.*;
 import java.util.concurrent.TimeUnit;
 
+
 public class Maze {
 	
 
-	static double maxSpeed = 500;
+	static double maxSpeed = 50;
 	static double errorTotal;
 	static double lastError = 0;
 	static double proportional;
@@ -31,9 +32,9 @@ public class Maze {
     static int defaultSpeed = 100;
 	
 	//Constants
-	static double kp = 8.76;
-	static double ki = 13.17;
-	static double kd = 1.46;
+	static double kp = 7.3;
+	static double ki = 0;
+	static double kd = 0;
 	
 
 	
@@ -56,20 +57,20 @@ public class Maze {
             double leftDistance = sensorL.getDistance();
             double rightDistance = sensorR.getDistance();
 
-            if (leftDistance == double.POSITIVE_INFINITY){
+            if (leftDistance == Double.POSITIVE_INFINITY ||leftDistance ==  Double.NEGATIVE_INFINITY){
                 leftDistance = 0;
             }
-            if (rightDistance == double.POSITIVE_INFINITY){
+            if (rightDistance == Double.POSITIVE_INFINITY ||rightDistance == Double.NEGATIVE_INFINITY){
                 rightDistance = 0;
             }
 
             double errorL = (leftDistance * 100) - sensorTarget; 
             double errorR = (rightDistance * 100) - sensorTarget; 
-            double errorRL = errorL + errorR;
+            // double errorRL = errorL + errorR;
             
 
             if(errorRL != 0){
-                errorTotal += error;
+                errorTotal += errorRL;
             }
             else{
                 errorTotal = 0;
@@ -81,15 +82,15 @@ public class Maze {
                 derivative = 0;
             }
 
-            proportional = error * kp;
+            proportional = errorRL * kp;
             integral = errorTotal * ki;
-            derivative = (error - lastError) * kd;
+            derivative = (errorRL - lastError) * kd;
             lastError = errorRL;
 
             double speed = Math.abs((proportional + integral + derivative) * 10);
             double motorSpeed = speed / 1.1;
 
-            System.out.println("Error: "+error);
+            System.out.println("Error: "+errorRL);
             System.out.println("DISTANCE LEFT: "+sensorL.getDistance());
             System.out.println("DISTANCE RIGHT: "+sensorR.getDistance());
 
@@ -103,7 +104,7 @@ public class Maze {
                 rightMotor.setSpeed(defaultSpeed);
                 leftMotor.forward();
                 rightMotor.forward();
-                System.println("go")
+                System.out.println("go");
 
             }
               
@@ -113,7 +114,7 @@ public class Maze {
                 rightMotor.setSpeed((int)motorSpeed);
                 leftMotor.forward();
                 rightMotor.forward();
-                System.println("leftTurn")
+                System.out.println("leftTurn");
             }
             //Turn Right
             else{
@@ -121,7 +122,7 @@ public class Maze {
                 leftMotor.setSpeed((int)motorSpeed);
                 leftMotor.forward();
                 rightMotor.forward();
-                System.println("leftTurn")
+                System.out.println("rightTurn");
 
             }
         
