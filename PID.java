@@ -21,22 +21,22 @@ import java.util.concurrent.TimeUnit;
 public class PID {
 	
 
-	static double maxSpeed = 500;
+	static double maxSpeed = 350;
 	static double errorTotal;
 	static double lastError = 0;
 	static double proportional;
 	static double integral;
 	static double derivative;
-	static double targetDistance = 30; // cm
+	static double targetDistance = 50; // cm
 	
 	//Constants
-	static double kp = 3.65    ;
+	static double kp = 8.76;
 	static double ki = 0;
-	static double kd = 0;
+	static double kd = 1.46;
 	
 	private static void setDistance(){
 		if(targetDistance == 50){
-			targetDistance = 50;
+			targetDistance = 30;
 		}
 		else{
 			targetDistance = 50;
@@ -46,30 +46,33 @@ public class PID {
 	public static void main(String[] args) {
 		
 		//Create a robot object to use and connect to it
-        Robot myRobot = new Robot("dia-lego-a8");
+        Robot myRobot = new Robot("dia-lego-a1");
        
         //The robot is made of components which are themselves objects.
         //Create references to them as useful shortcuts
         Motor leftMotor = myRobot.getLargeMotor(Motor.Port.B);
         Motor rightMotor = myRobot.getLargeMotor(Motor.Port.C);
         UltrasonicSensor sensor = myRobot.getUltrasonicSensor(Sensor.Port.S2);
-        long t = System.currentTimeMillis();
-        long tenSec = 10000;
-        long finish = t + 30000;
-        long end = t + tenSec;
         
         
-        while(System.currentTimeMillis() < finish) {
-            
+        while(true) {
+            long t = System.currentTimeMillis();
+            long tenSec = 10000;
+            long finish = t + 60000;
+            long end = t + tenSec;
             setDistance();
-            int counter = 0 ;
+            
 
             if(t >= finish ){
                 break;
             }
+            if(t >= finish){
+                myRobot.close();
+                break;
+            }
             
             while(true) {
-                counter ++;
+                myRobot.sleep(50);
                 double error = (sensor.getDistance() * 100) - targetDistance; 
                 if(System.currentTimeMillis() >= end){
                     break;
@@ -121,7 +124,7 @@ public class PID {
 		
 
 		// //Disconnect from the Robot
-        myRobot.close();
+  //       myRobot.close();
 		
 
 	}
