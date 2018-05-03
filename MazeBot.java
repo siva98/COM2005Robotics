@@ -133,6 +133,8 @@ public class MazeBot {
             System.out.println("motor SPEED AFTER MAX:" + motorSpeed);
             
             
+
+
             if(error == 0){
                 leftMotor.setSpeed(defaultSpeed);
                 rightMotor.setSpeed(defaultSpeed);
@@ -141,7 +143,29 @@ public class MazeBot {
                 System.out.println("go");
 
             }
-            int sleepTime = calculateSleep(error);  
+            int sleepTime = calculateSleep(error); 
+
+            //Reverse right wheel
+            if(leftDistance <= 3){
+                leftMotor.setSpeed(0);
+                rightMotor.backward();
+                myRobot.sleep(20);
+                leftMotor.setSpeed(defaultSpeed);
+                leftMotor.forward();
+                rightMotor.forward();
+            }
+
+            //Reverse left wheel
+            if(rightDistance <= 3){
+                leftMotor.backward();
+                rightMotor.setSpeed(0);
+                myRobot.sleep(20);
+                rightMotor.setSpeed(defaultSpeed);
+                leftMotor.forward();
+                rightMotor.forward();
+            }
+
+
             //Turn Right
             if(error > 0){
                 myRobot.sleep(sleepTime);
@@ -163,6 +187,7 @@ public class MazeBot {
             }
             lastLeftDistance = leftDistance;
             lastRightDistance = rightDistance;
+
         
         }
     
