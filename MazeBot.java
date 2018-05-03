@@ -149,20 +149,22 @@ public class MazeBot {
             if(leftDistance <= 3){
                 leftMotor.setSpeed(0);
                 rightMotor.backward();
-                myRobot.sleep(20);
-                leftMotor.setSpeed(defaultSpeed);
-                leftMotor.forward();
-                rightMotor.forward();
+                myRobot.sleep(900);
+                //leftMotor.setSpeed(defaultSpeed);
+                // leftMotor.forward();
+                // rightMotor.forward();
+                System.out.println("Reverse Right ~~~~~~~~~~~~~~~~~~~~~~");
             }
 
             //Reverse left wheel
             if(rightDistance <= 3){
                 leftMotor.backward();
                 rightMotor.setSpeed(0);
-                myRobot.sleep(20);
-                rightMotor.setSpeed(defaultSpeed);
-                leftMotor.forward();
-                rightMotor.forward();
+                myRobot.sleep(900);
+                //rightMotor.setSpeed(defaultSpeed);
+                // leftMotor.forward();
+                // rightMotor.forward();
+                System.out.println("Reverse Left ~~~~~~~~~~~~~~~~~~~~~~");
             }
 
 
@@ -196,7 +198,7 @@ public class MazeBot {
 		
 
 		// //Disconnect from the Robot
-  //       myRobot.close();
+        myRobot.close();
 		
 
 	}
