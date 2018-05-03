@@ -38,6 +38,23 @@ public class MazeBot {
 	static double ki = 1.5;
 	static double kd = 0.2;
 	
+    private static int calculateSleep(double error){
+
+        error = Math.abs(error);
+        int sleep = 0;
+
+        if(0 < error && error <= 10){
+            sleep = 20;
+        }
+        else if(11 < error && error <= 30){
+            sleep = 40;
+        }
+        else{
+            sleep = 100;
+        }
+        return sleep;
+
+    }
 
 	
 	public static void main(String[] args) {
@@ -124,10 +141,10 @@ public class MazeBot {
                 System.out.println("go");
 
             }
-              
+            int sleepTime = calculateSleep(error);  
             //Turn Right
             if(error > 0){
-                myRobot.sleep(100);
+                myRobot.sleep(sleepTime);
                 leftMotor.setSpeed(defaultSpeed);
                 rightMotor.setSpeed((int)motorSpeed);
                 leftMotor.forward();
@@ -136,7 +153,7 @@ public class MazeBot {
             }
             //Turn Left
             else{
-                myRobot.sleep(100);
+                myRobot.sleep(sleepTime);
                 rightMotor.setSpeed(defaultSpeed);
                 leftMotor.setSpeed((int)motorSpeed);
                 leftMotor.forward();
