@@ -50,7 +50,7 @@ public class MazeBot {
             sleep = 30;
         }
         else{
-            sleep = 70;
+            sleep = 100;
         }
         return sleep;
 
@@ -146,7 +146,7 @@ public class MazeBot {
             int sleepTime = calculateSleep(error); 
 
             //Reverse right wheel
-            if((leftDistance <= 3)&&(leftDistance > 0)){
+            if((leftDistance <= 4)&&(leftDistance > 0)){
                 leftMotor.setSpeed(0);
                 rightMotor.backward();
                 myRobot.sleep(900);
@@ -157,7 +157,7 @@ public class MazeBot {
             }
 
             //Reverse left wheel
-            if((rightDistance <= 3)&&(rightDistance > 0)){
+            if((rightDistance <= 4)&&(rightDistance > 0)){
                 leftMotor.backward();
                 rightMotor.setSpeed(0);
                 myRobot.sleep(900);
