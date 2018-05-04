@@ -145,27 +145,27 @@ public class MazeBot {
             }
             int sleepTime = calculateSleep(error); 
 
-            // //Reverse right wheel
-            // if(leftDistance <= 3){
-                // leftMotor.setSpeed(0);
-                // rightMotor.backward();
-                // myRobot.sleep(900);
-                // //leftMotor.setSpeed(defaultSpeed);
-                // // leftMotor.forward();
-                // // rightMotor.forward();
-                // System.out.println("Reverse Right ~~~~~~~~~~~~~~~~~~~~~~");
-            // }
+            //Reverse right wheel
+            if((leftDistance <= 3)&&(leftDistance > 0)){
+                leftMotor.setSpeed(0);
+                rightMotor.backward();
+                myRobot.sleep(900);
+                //leftMotor.setSpeed(defaultSpeed);
+                // leftMotor.forward();
+                // rightMotor.forward();
+                System.out.println("Reverse Right ~~~~~~~~~~~~~~~~~~~~~~");
+            }
 
-            // //Reverse left wheel
-            // if(rightDistance <= 3){
-                // leftMotor.backward();
-                // rightMotor.setSpeed(0);
-                // myRobot.sleep(900);
-                // //rightMotor.setSpeed(defaultSpeed);
-                // // leftMotor.forward();
-                // // rightMotor.forward();
-                // System.out.println("Reverse Left ~~~~~~~~~~~~~~~~~~~~~~");
-            // }
+            //Reverse left wheel
+            if((rightDistance <= 3)&&(rightDistance > 0)){
+                leftMotor.backward();
+                rightMotor.setSpeed(0);
+                myRobot.sleep(900);
+                //rightMotor.setSpeed(defaultSpeed);
+                // leftMotor.forward();
+                // rightMotor.forward();
+                System.out.println("Reverse Left ~~~~~~~~~~~~~~~~~~~~~~");
+            }
 
 
             //Turn Left
